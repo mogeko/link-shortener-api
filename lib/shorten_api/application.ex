@@ -11,7 +11,7 @@ defmodule ShortenApi.Application do
     children = [
       # Starts a worker by calling: ShortenApi.Worker.start_link(arg)
       # {ShortenApi.Worker, arg}
-      {Plug.Cowboy, scheme: :http, plug: ShortenApi.Router, options: [port: 8080]}
+      {Plug.Cowboy, scheme: :http, plug: ShortenApi.Router, options: [port: cowboy_port()]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -22,4 +22,6 @@ defmodule ShortenApi.Application do
 
     Supervisor.start_link(children, opts)
   end
+
+  defp cowboy_port, do: Application.fetch_env!(:shorten_api, :cowboy_port)
 end
