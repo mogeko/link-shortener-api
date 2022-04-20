@@ -7,6 +7,7 @@ defmodule ShortenApi.Plug.REST do
   def call(conn, _opts) do
     res = case conn.method do
       "GET" -> handle_get(conn)
+      "POST" -> handle_post(conn)
     end
     conn
     |> put_resp_content_type("application/json")
@@ -14,21 +15,24 @@ defmodule ShortenApi.Plug.REST do
   end
 
   defp handle_get(conn) do
-    url = Query.decode(conn.query_string)["url"]
-    if url == "" || is_nil(url) do
-      {:error, "Parameter error"}
-    else
-      hash_id = ShortenApi.HashId.generate(url)
-      {:ok, hash_id}
-    end
+    conn.query_string
+    |> Query.decode()
+    |> Map.fetch("url")
+    |> ShortenApi.HashId.generate()
+  end
+
+  defp handle_post(conn) do
+    conn.params
+    |> Map.fetch("url")
+    |> ShortenApi.HashId.generate()
   end
 
   defp to_json(conn, {:ok, hash_id}) do
     [host_url | _tail] = get_req_header(conn, "host")
-    Jason.encode!(%{ok: true, body: "#{conn.scheme}://#{host_url}/#{hash_id}"})
+    Jason.encode!(%{ok: true, short_link: "#{conn.scheme}://#{host_url}/#{hash_id}"})
   end
 
-  defp to_json(_conn, {:error, msg}) do
-    Jason.encode!(%{ok: false, message: msg})
+  defp to_json(_conn, :error) do
+    Jason.encode!(%{ok: false, message: "Parameter error"})
   end
 end
