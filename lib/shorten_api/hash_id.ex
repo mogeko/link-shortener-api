@@ -10,6 +10,7 @@ defmodule ShortenApi.HashId do
   ## Example
       iex> ShortenApi.HashId.generate({:ok, "ABC"})
       {:ok, "PAG9uybz"}
+
       iex> ShortenApi.HashId.generate(:error)
       :error
   """
