@@ -7,21 +7,23 @@ defmodule ShortenApi.Plug.REST do
 
   @spec call(Plug.Conn.t, Plug.opts) :: Plug.Conn.t
   def call(conn, _opts) do
-    IO.inspect(conn)
     res = conn.params
     |> Map.fetch("url")
     |> ShortenApi.HashId.generate()
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(200, to_json(conn, res))
+    |> put_resp_msg(res)
+    |> send_resp()
   end
 
-  defp to_json(conn, {:ok, hash_id}) do
+  defp put_resp_msg(conn, {:ok, hash_id}) do
     [host_url | _tail] = get_req_header(conn, "host")
-    Jason.encode!(%{ok: true, short_link: "#{conn.scheme}://#{host_url}/#{hash_id}"})
+    res = Jason.encode!(%{ok: true, short_link: "#{conn.scheme}://#{host_url}/#{hash_id}"})
+    resp(conn, 201, res)
   end
 
-  defp to_json(_conn, :error) do
-    Jason.encode!(%{ok: false, message: "Parameter error"})
+  defp put_resp_msg(conn, :error) do
+    res = Jason.encode!(%{ok: false, message: "Parameter error"})
+    resp(conn, 404, res)
   end
 end
