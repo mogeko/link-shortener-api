@@ -1,10 +1,11 @@
 defmodule ShortenApi.Plug.REST do
+  @behaviour Plug
   import Plug.Conn
 
-  @spec init(any) :: any
+  @spec init(Plug.opts) :: Plug.opts
   def init(opts), do: opts
 
-  @spec call(Plug.Conn.t, any) :: Plug.Conn.t
+  @spec call(Plug.Conn.t, Plug.opts) :: Plug.Conn.t
   def call(conn, _opts) do
     IO.inspect(conn)
     res = conn.params
