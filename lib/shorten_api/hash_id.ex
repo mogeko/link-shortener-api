@@ -6,7 +6,7 @@ defmodule ShortenApi.HashId do
 
   ## Example
       iex> ShortenApi.HashId.generate({:ok, "ABC"})
-      PAG9uybz
+      {:ok, "PAG9uybz"}
       iex> ShortenApi.HashId.generate(:error)
       :error
 
