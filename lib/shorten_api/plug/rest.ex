@@ -1,30 +1,18 @@
 defmodule ShortenApi.Plug.REST do
   import Plug.Conn
-  alias Plug.Conn.Query
 
+  @spec init(any) :: any
   def init(opts), do: opts
 
+  @spec call(Plug.Conn.t, any) :: Plug.Conn.t
   def call(conn, _opts) do
-    res = case conn.method do
-      "GET" -> handle_get(conn)
-      "POST" -> handle_post(conn)
-    end
+    IO.inspect(conn)
+    res = conn.params
+    |> Map.fetch("url")
+    |> ShortenApi.HashId.generate()
     conn
     |> put_resp_content_type("application/json")
     |> send_resp(200, to_json(conn, res))
-  end
-
-  defp handle_get(conn) do
-    conn.query_string
-    |> Query.decode()
-    |> Map.fetch("url")
-    |> ShortenApi.HashId.generate()
-  end
-
-  defp handle_post(conn) do
-    conn.params
-    |> Map.fetch("url")
-    |> ShortenApi.HashId.generate()
   end
 
   defp to_json(conn, {:ok, hash_id}) do
