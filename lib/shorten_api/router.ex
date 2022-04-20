@@ -2,6 +2,7 @@ defmodule ShortenApi.Router do
   use Plug.Router
   import Plug.Conn
 
+  plug Plug.Logger
   plug Plug.Parsers, parsers: [:urlencoded, :json], json_decoder: Jason
   plug :match
   plug :dispatch
