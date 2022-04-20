@@ -5,15 +5,12 @@ defmodule ShortenApi.Plug.REST do
   def init(opts), do: opts
 
   def call(conn, _opts) do
-    {:ok, hash_id} = case conn.method do
+    res = case conn.method do
       "GET" -> handle_get(conn)
     end
-    res = if conn.port == 80 do
-      "#{conn.scheme}://#{conn.host}/#{hash_id}"
-    else
-      "#{conn.scheme}://#{conn.host}:#{conn.port}/#{hash_id}"
-    end
-    send_resp(conn, 200, res)
+    conn
+    |> put_resp_content_type("application/json")
+    |> send_resp(200, to_json(conn, res))
   end
 
   defp handle_get(conn) do
@@ -24,5 +21,14 @@ defmodule ShortenApi.Plug.REST do
       hash_id = ShortenApi.HashId.generate(url)
       {:ok, hash_id}
     end
+  end
+
+  defp to_json(conn, {:ok, hash_id}) do
+    [host_url | _tail] = get_req_header(conn, "host")
+    Jason.encode!(%{ok: true, body: "#{conn.scheme}://#{host_url}/#{hash_id}"})
+  end
+
+  defp to_json(_conn, {:error, msg}) do
+    Jason.encode!(%{ok: false, message: msg})
   end
 end
