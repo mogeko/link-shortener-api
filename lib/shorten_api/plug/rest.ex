@@ -1,10 +1,19 @@
 defmodule ShortenApi.Plug.REST do
+  @moduledoc """
+  A REST Plug for generating short links.
+  """
   @behaviour Plug
   import Plug.Conn
 
+  @doc """
+  Pass `Plug.opts` to `call/2`
+  """
   @spec init(Plug.opts) :: Plug.opts
   def init(opts), do: opts
 
+  @doc """
+  Process `Plug.Conn.t`, return the generated short link.
+  """
   @spec call(Plug.Conn.t, Plug.opts) :: Plug.Conn.t
   def call(conn, _opts) do
     res = conn.params

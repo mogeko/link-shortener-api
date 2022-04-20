@@ -1,4 +1,7 @@
 defmodule ShortenApi.HashId do
+  @moduledoc """
+  Handling HashId
+  """
   @hash_id_length 8
 
   @doc """
@@ -9,9 +12,8 @@ defmodule ShortenApi.HashId do
       {:ok, "PAG9uybz"}
       iex> ShortenApi.HashId.generate(:error)
       :error
-
   """
-  @spec generate(:error | {:ok, any}) :: :error | {:ok, String.t}
+  @spec generate(:error | {:ok, String.t}) :: :error | {:ok, String.t}
   def generate({:ok, url}) do
     hash_id = url
     |> (&:crypto.hash(:sha, &1)).()
