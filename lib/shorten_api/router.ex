@@ -8,6 +8,8 @@ defmodule ShortenApi.Router do
     send_resp(conn, 200, "Welcome")
   end
 
+  forward "/api/v1", to: ShortenApi.Plug.REST
+
   match _ do
     send_resp(conn, 404, "Oops!")
   end
