@@ -15,6 +15,7 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@v1
         with:
+          otp-version: 24
           elixir-version: 1.13.4
       - name: Set up deps
         run: mix deps.get
