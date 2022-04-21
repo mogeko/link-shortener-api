@@ -21,3 +21,9 @@ jobs:
         run: mix deps.get
       - name: Run Test
         run: mix test
+      - name: Export Test Coverage
+        run: mix test --cover --export-coverage default
+      - name: Push Test Coverage Data
+        uses: codecov/codecov-action@v2
+        with:
+          files: ./cover/default.coverdata
