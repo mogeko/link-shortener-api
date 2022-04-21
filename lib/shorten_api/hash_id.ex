@@ -13,7 +13,7 @@ defmodule ShortenApi.HashId do
       {:ok, "PAG9uybz"}
 
   """
-  @spec generate(String.t) :: :error | {:ok, String.t}
+  @spec generate(String.t()) :: :error | {:ok, String.t()}
   def generate(text), do: {:ok, generate!(text)}
 
   @doc """
@@ -23,7 +23,7 @@ defmodule ShortenApi.HashId do
       "PAG9uybz"
 
   """
-  @spec generate!(String.t) :: String.t
+  @spec generate!(String.t()) :: String.t()
   def generate!(text) do
     text
     |> (&:crypto.hash(:sha, &1)).()

@@ -1,4 +1,5 @@
 defmodule ShortenApi.Router do
+  @moduledoc false
   use Plug.Router
   import Plug.Conn
 

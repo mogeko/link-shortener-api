@@ -38,10 +38,4 @@ defmodule ShortenApi.DB.LinkTest do
 
     assert changeset.valid?
   end
-
-  test "write error" do
-    res = Link.write(:error, @example_url)
-
-    assert res == :error
-  end
 end

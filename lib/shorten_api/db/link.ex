@@ -1,16 +1,19 @@
 defmodule ShortenApi.DB.Link do
+  @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "link" do
-    field(:hash, :string)
+  @primary_key {:hash, :string, [autogenerate: false]}
+  schema "links" do
     field(:url, :string)
+    timestamps()
   end
 
-  @spec changeset(Ecto.Schema.t | map, map) :: Ecto.Changeset.t
+  @doc false
+  @spec changeset(Ecto.Schema.t() | map, map) :: Ecto.Changeset.t()
   def changeset(struct, params) do
     struct
-    |> cast(params, [:hash, :url])
+    |> cast(params, [:hash, :url, :inserted_at])
     |> validate_required([:hash, :url])
     |> validate_format(:url, ~r/htt(p|ps):\/\/(\w+.)+/)
     |> validate_hash_matched(:hash, :url)
@@ -29,7 +32,7 @@ defmodule ShortenApi.DB.Link do
       validate_hash_matched(changeset, :hash, :url)
 
   """
-  @spec validate_hash_matched(Ecto.Changeset.t, atom, atom) :: Ecto.Changeset.t
+  @spec validate_hash_matched(Ecto.Changeset.t(), atom, atom) :: Ecto.Changeset.t()
   def validate_hash_matched(changeset, hash, text) do
     import ShortenApi.HashId
     target_hash = get_field(changeset, hash)
@@ -42,12 +45,11 @@ defmodule ShortenApi.DB.Link do
     end
   end
 
-  @spec write(:error | {:ok, String.t}, String.t) :: :error | {:ok, Ecto.Schema.t} | {:error, Ecto.Changeset.t}
-  def write({:ok, hash}, url) do
+  @doc false
+  @spec write(String.t(), String.t()) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+  def write(hash, url) do
     %ShortenApi.DB.Link{}
     |> changeset(%{hash: hash, url: url})
     |> ShortenApi.Repo.insert()
   end
-
-  def write(:error, _url), do: :error
 end
