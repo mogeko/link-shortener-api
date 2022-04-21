@@ -1,0 +1,22 @@
+on:
+  pull_request:
+  push:
+    branches-ignore:    
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Test Elixir
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: 1.13.4
+      - name: Set up deps
+        run: mix deps.get
+      - name: Run Test
+        run: mix test
