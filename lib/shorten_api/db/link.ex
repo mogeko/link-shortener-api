@@ -3,11 +3,11 @@ defmodule ShortenApi.DB.Link do
   import Ecto.Changeset
 
   schema "link" do
-    field :hash, :string
-    field :url, :string
+    field(:hash, :string)
+    field(:url, :string)
   end
 
-  @spec changeset(Ecto.Schema.t | map, map) :: Ecto.Changeset.t
+  @spec changeset(Ecto.Schema.t() | map, map) :: Ecto.Changeset.t()
   def changeset(struct, params) do
     struct
     |> cast(params, [:hash, :url])
@@ -29,14 +29,14 @@ defmodule ShortenApi.DB.Link do
       validate_hash_matched(changeset, :hash, :url)
 
   """
-  @spec validate_hash_matched(Ecto.Changeset.t, atom, atom) :: Ecto.Changeset.t
+  @spec validate_hash_matched(Ecto.Changeset.t(), atom, atom) :: Ecto.Changeset.t()
   def validate_hash_matched(changeset, hash, text) do
     import ShortenApi.HashId
     target_hash = get_field(changeset, hash)
     target_text = get_field(changeset, text)
 
     if generate!({:ok, target_text}) != target_hash do
-      add_error(changeset,:hash, "does not match target link")
+      add_error(changeset, :hash, "does not match target link")
     else
       changeset
     end

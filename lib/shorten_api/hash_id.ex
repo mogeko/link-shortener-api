@@ -16,7 +16,7 @@ defmodule ShortenApi.HashId do
       :error
 
   """
-  @spec generate(:error | {:ok, String.t}) :: :error | {:ok, String.t}
+  @spec generate(:error | {:ok, String.t()}) :: :error | {:ok, String.t()}
   def generate({:ok, _} = context), do: {:ok, generate!(context)}
   def generate(:error), do: generate!(:error)
 
@@ -30,11 +30,11 @@ defmodule ShortenApi.HashId do
       :error
 
   """
-  @spec generate!(:error | {:ok, String.t}) :: :error | String.t
+  @spec generate!(:error | {:ok, String.t()}) :: :error | String.t()
   def generate!({:ok, url}) do
     url
     |> (&:crypto.hash(:sha, &1)).()
-    |> Base.encode64
+    |> Base.encode64()
     |> binary_part(0, @hash_id_length)
   end
 
