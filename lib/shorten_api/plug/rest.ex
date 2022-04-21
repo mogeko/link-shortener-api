@@ -21,13 +21,12 @@ defmodule ShortenApi.Plug.REST do
   """
   @spec call(Plug.Conn.t(), Plug.opts()) :: Plug.Conn.t()
   def call(conn, _opts) do
-    res =
-      conn.params
-      |> Map.fetch("url")
-      |> ShortenApi.HashId.generate()
+    resp_msg = with {:ok, url} <- Map.fetch(conn.params, "url") do
+      ShortenApi.HashId.generate(url)
+    end
     conn
     |> put_resp_content_type("application/json")
-    |> put_resp_msg(res)
+    |> put_resp_msg(resp_msg)
     |> send_resp()
   end
 

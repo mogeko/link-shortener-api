@@ -35,7 +35,7 @@ defmodule ShortenApi.DB.Link do
     target_hash = get_field(changeset, hash)
     target_text = get_field(changeset, text)
 
-    if generate!({:ok, target_text}) != target_hash do
+    if generate!(target_text) != target_hash do
       add_error(changeset, :hash, "does not match target link")
     else
       changeset

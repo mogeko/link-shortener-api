@@ -9,34 +9,25 @@ defmodule ShortenApi.HashId do
 
   ## Examples
 
-      iex> ShortenApi.HashId.generate({:ok, "ABC"})
+      iex> ShortenApi.HashId.generate("ABC")
       {:ok, "PAG9uybz"}
 
-      iex> ShortenApi.HashId.generate(:error)
-      :error
-
   """
-  @spec generate(:error | {:ok, String.t()}) :: :error | {:ok, String.t()}
-  def generate({:ok, _} = context), do: {:ok, generate!(context)}
-  def generate(:error), do: generate!(:error)
+  @spec generate(String.t) :: :error | {:ok, String.t}
+  def generate(text), do: {:ok, generate!(text)}
 
   @doc """
   ## Examples
 
-      iex> ShortenApi.HashId.generate!({:ok, "ABC"})
+      iex> ShortenApi.HashId.generate!("ABC")
       "PAG9uybz"
 
-      iex> ShortenApi.HashId.generate!(:error)
-      :error
-
   """
-  @spec generate!(:error | {:ok, String.t()}) :: :error | String.t()
-  def generate!({:ok, url}) do
-    url
+  @spec generate!(String.t) :: String.t
+  def generate!(text) do
+    text
     |> (&:crypto.hash(:sha, &1)).()
     |> Base.encode64()
     |> binary_part(0, @hash_id_length)
   end
-
-  def generate!(:error), do: :error
 end
