@@ -7,7 +7,7 @@ defmodule ShortenApi.DB.Link do
     field(:url, :string)
   end
 
-  @spec changeset(Ecto.Schema.t() | map, map) :: Ecto.Changeset.t()
+  @spec changeset(Ecto.Schema.t | map, map) :: Ecto.Changeset.t
   def changeset(struct, params) do
     struct
     |> cast(params, [:hash, :url])
@@ -29,7 +29,7 @@ defmodule ShortenApi.DB.Link do
       validate_hash_matched(changeset, :hash, :url)
 
   """
-  @spec validate_hash_matched(Ecto.Changeset.t(), atom, atom) :: Ecto.Changeset.t()
+  @spec validate_hash_matched(Ecto.Changeset.t, atom, atom) :: Ecto.Changeset.t
   def validate_hash_matched(changeset, hash, text) do
     import ShortenApi.HashId
     target_hash = get_field(changeset, hash)
@@ -41,4 +41,13 @@ defmodule ShortenApi.DB.Link do
       changeset
     end
   end
+
+  @spec write(:error | {:ok, String.t}, String.t) :: :error | {:ok, Ecto.Schema.t} | {:error, Ecto.Changeset.t}
+  def write({:ok, hash}, url) do
+    %ShortenApi.DB.Link{}
+    |> changeset(%{hash: hash, url: url})
+    |> ShortenApi.Repo.insert()
+  end
+
+  def write(:error, _url), do: :error
 end
