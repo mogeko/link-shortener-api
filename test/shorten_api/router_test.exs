@@ -49,7 +49,6 @@ defmodule ShortenApi.RouterTest do
     |> conn("/api/v1", %{url: @example_url})
     |> put_req_header("host", "www.example.com")
     |> Router.call(opts)
-    |> IO.inspect()
 
     assert conn.state == :sent
     assert conn.status == 201
