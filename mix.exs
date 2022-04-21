@@ -7,7 +7,8 @@ defmodule ShortenApi.MixProject do
       version: "0.1.0",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -27,7 +28,8 @@ defmodule ShortenApi.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:ecto_sql, "~> 3.2"},
       {:postgrex, "~> 0.15"},
-      {:jason, "~> 1.3"}
+      {:jason, "~> 1.3"},
+      {:excoveralls, "~> 0.14.4", only: [:test]}
     ]
   end
 end

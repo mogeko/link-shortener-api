@@ -22,8 +22,8 @@ jobs:
       - name: Run Test
         run: mix test
       - name: Export Test Coverage
-        run: mix test --cover --export-coverage default
+        run: MIX_ENV=test mix coveralls.xml
       - name: Push Test Coverage Data
         uses: codecov/codecov-action@v2
         with:
-          files: ./cover/default.coverdata
+          files: ./cover/excoveralls.xml
