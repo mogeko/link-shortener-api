@@ -29,4 +29,15 @@ defmodule ShortenApi.RouterTest do
     assert conn.state == :sent
     assert conn.status == 404
   end
+
+  test "return 403 from /api/v1", %{opts: opts} do
+    conn =
+      :get
+      |> conn("/api/v1?url=www.example.com")
+      |> put_req_header("host", "www.example.com")
+      |> Router.call(opts)
+
+    assert conn.state == :sent
+    assert conn.status == 403
+  end
 end

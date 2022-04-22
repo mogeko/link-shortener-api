@@ -6,7 +6,6 @@ defmodule ShortenApi.Plug.RESTTest do
 
   @example_url "http://www.example.com"
   @example_hash "dA5zl5B8"
-  @example_body %REST.Resp{short_link: "#{@example_url}/#{@example_hash}"}
 
   setup_all do
     get_conn =
@@ -22,11 +21,12 @@ defmodule ShortenApi.Plug.RESTTest do
   end
 
   test "put short link msg to resp", %{conn: get_conn, struct: struct} do
+    resp_msg = %REST.Resp{short_link: "#{@example_url}/#{@example_hash}"}
     conn = REST.put_resp_msg(get_conn, {:ok, struct})
 
     assert conn.state == :set
     assert conn.status == 201
-    assert conn.resp_body == Jason.encode!(@example_body)
+    assert conn.resp_body == Jason.encode!(resp_msg)
   end
 
   test "should put error msg_404 to resp", %{conn: get_conn} do
