@@ -55,9 +55,15 @@ defmodule ShortenApi.Plug.REST do
     resp(conn, 201, resp_json)
   end
 
+  def put_resp_msg(conn, {:error, _changeset}) do
+    alias ShortenApi.Plug.REST.ErrResp
+    resp_json = Jason.encode!(%ErrResp{message: "Wrong format"})
+    resp(conn, 403, resp_json)
+  end
+
   def put_resp_msg(conn, :error) do
     alias ShortenApi.Plug.REST.ErrResp
-    res = Jason.encode!(%ErrResp{message: "Parameter error"})
-    resp(conn, 404, res)
+    resp_json = Jason.encode!(%ErrResp{message: "Parameter error"})
+    resp(conn, 404, resp_json)
   end
 end

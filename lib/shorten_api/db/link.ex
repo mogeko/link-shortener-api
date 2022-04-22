@@ -13,10 +13,11 @@ defmodule ShortenApi.DB.Link do
   @spec changeset(Ecto.Schema.t() | map, map) :: Ecto.Changeset.t()
   def changeset(struct, params) do
     struct
-    |> cast(params, [:hash, :url, :inserted_at])
+    |> cast(params, [:hash, :url])
     |> validate_required([:hash, :url])
     |> validate_format(:url, ~r/htt(p|ps):\/\/(\w+.)+/)
     |> validate_hash_matched(:hash, :url)
+    |> unique_constraint(:url)
   end
 
   @doc """
