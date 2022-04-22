@@ -4,9 +4,6 @@ defmodule ShortenApi.HashId do
   """
   @hash_id_length 8
 
-  @type t :: atom() | nil | String.t()
-
-  @spec generate(t()) :: :error | {:ok, String.t()}
   @doc """
   Generates a HashId
 
@@ -22,8 +19,9 @@ defmodule ShortenApi.HashId do
       :error
 
   """
+  @spec generate(String.t() | any()) :: :error | {:ok, String.t()}
   def generate(text) when is_binary(text), do: {:ok, generate!(text)}
-  def generate(value), do: generate!(value)
+  def generate(any), do: generate!(any)
 
   @doc """
   ## Examples
@@ -38,7 +36,7 @@ defmodule ShortenApi.HashId do
       :error
 
   """
-  @spec generate!(t()) :: :error | String.t()
+  @spec generate!(String.t() | any()) :: :error | String.t()
   def generate!(text) when is_binary(text) do
     text
     |> (&:crypto.hash(:sha, &1)).()
@@ -46,6 +44,5 @@ defmodule ShortenApi.HashId do
     |> binary_part(0, @hash_id_length)
   end
 
-  def generate!(atom) when is_atom(atom), do: :error
-  def generate!(nil), do: :error
+  def generate!(_any), do: :error
 end
