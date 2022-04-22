@@ -10,20 +10,36 @@ defmodule ShortenApi.Router do
 
   get "/" do
     [host_url | _tail] = get_req_header(conn, "host")
-    res = Jason.encode!(%{message: "#{conn.scheme}://#{host_url}/api/v1"})
+    resp_msg = Jason.encode!(%{message: "#{conn.scheme}://#{host_url}/api/v1"})
 
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(200, res)
+    |> send_resp(200, resp_msg)
   end
 
   forward("/api/v1", to: ShortenApi.Plug.REST)
 
+  get "/:hash" do
+    import Ecto.Query, only: [from: 2]
+    query = from l in ShortenApi.DB.Link, where: l.hash == ^hash, select: l.url
+    url = ShortenApi.Repo.one(query)
+
+    if is_nil(url) do
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(404, Jason.encode!(%{message: "Not Found"}))
+    else
+      conn
+      |> put_resp_header("location", url)
+      |> send_resp(302, "Redirect to #{url}")
+    end
+  end
+
   match _ do
-    res = Jason.encode!(%{message: "Not Found"})
+    resp_msg = Jason.encode!(%{message: "Not Found"})
 
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(404, res)
+    |> send_resp(404, resp_msg)
   end
 end

@@ -35,7 +35,7 @@ defmodule ShortenApi.DB.Link do
   """
   @spec validate_hash_matched(Ecto.Changeset.t(), atom, atom) :: Ecto.Changeset.t()
   def validate_hash_matched(changeset, hash, text) do
-    import ShortenApi.HashId
+    import ShortenApi.HashId, only: [generate!: 1]
     target_hash = get_field(changeset, hash)
     target_text = get_field(changeset, text)
 

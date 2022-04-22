@@ -23,7 +23,17 @@ defmodule ShortenApi.RouterTest do
   test "returns 404", %{opts: opts} do
     conn =
       :get
-      |> conn("/missing")
+      |> conn("/the/path/is/missing")
+      |> Router.call(opts)
+
+    assert conn.state == :sent
+    assert conn.status == 404
+  end
+
+  test "URL not found in database", %{opts: opts} do
+    conn =
+      :get
+      |> conn("/not_found")
       |> Router.call(opts)
 
     assert conn.state == :sent
