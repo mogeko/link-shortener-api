@@ -7,21 +7,27 @@ defmodule ShortenApi.HashId do
   @doc """
   Generates a HashId
 
-  ## Example
-      iex> ShortenApi.HashId.generate({:ok, "ABC"})
+  ## Examples
+
+      iex> ShortenApi.HashId.generate("ABC")
       {:ok, "PAG9uybz"}
 
-      iex> ShortenApi.HashId.generate(:error)
-      :error
   """
-  @spec generate(:error | {:ok, String.t}) :: :error | {:ok, String.t}
-  def generate({:ok, url}) do
-    hash_id = url
-    |> (&:crypto.hash(:sha, &1)).()
-    |> Base.encode64
-    |> binary_part(0, @hash_id_length)
-    {:ok, hash_id}
-  end
+  @spec generate(String.t()) :: :error | {:ok, String.t()}
+  def generate(text), do: {:ok, generate!(text)}
 
-  def generate(:error), do: :error
+  @doc """
+  ## Examples
+
+      iex> ShortenApi.HashId.generate!("ABC")
+      "PAG9uybz"
+
+  """
+  @spec generate!(String.t()) :: String.t()
+  def generate!(text) do
+    text
+    |> (&:crypto.hash(:sha, &1)).()
+    |> Base.encode64()
+    |> binary_part(0, @hash_id_length)
+  end
 end
