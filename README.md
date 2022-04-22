@@ -1,5 +1,8 @@
 # ShortenApi
 
+[![.github/workflows/test.yml](https://github.com/mogeko/link-shortener-api/actions/workflows/test.yml/badge.svg)](https://github.com/mogeko/link-shortener-api/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/mogeko/link-shortener-api/branch/master/graph/badge.svg?token=4lvEOie9Hj)](https://codecov.io/gh/mogeko/link-shortener-api)
+
 **TODO: Add description**
 
 ## Installation
