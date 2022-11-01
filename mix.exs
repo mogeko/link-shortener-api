@@ -29,7 +29,7 @@ defmodule ShortenApi.MixProject do
       {:ecto_sql, "~> 3.2"},
       {:postgrex, "~> 0.15"},
       {:jason, "~> 1.3"},
-      {:excoveralls, "~> 0.14.4", only: [:test]}
+      {:excoveralls, "~> 0.15.0", only: [:test]}
     ]
   end
 end
